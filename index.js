@@ -7,7 +7,9 @@ server.use(express.json());
 server.use(cors());
 const userRouter = require("./fetures/users/user.router")
 const templateRouter = require("./fetures/template/template.router.js");
+const postRouter = require("./fetures/Calender/calender.router.js");
 server.use("/user",userRouter);
+server.use("/post",postRouter);
 server.use("/template",templateRouter);
 
 server.get("/",(req,res)=>{
