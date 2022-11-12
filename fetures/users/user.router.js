@@ -53,10 +53,10 @@ server.post("/signin", async (req, res) => {
   }
 });
 
-server.get("/:_id", async (req, res) => {
-  const { _id } = req.params;
+server.get("/singleuser/:id", async (req, res) => {
+  const { id } = req.params;
   try {
-    const user = await User.findById(_id);
+    const user = await User.findById(id);
     res.send(user);
   } catch (e) {
     res.status(404).send("Id not found");
