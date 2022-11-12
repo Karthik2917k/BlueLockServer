@@ -1,16 +1,19 @@
-const express = require('express');
+const express = require("express");
 const server = express();
-const User = require("./user.model")
+const User = require("./user.model");
 
-
-server.get('/', async (req, res) => {
-  let user = await User.find()
-  res.send(user)
-})
+server.get("/:admin", async (req, res) => {
+  const { admin } = req.params;
+  if (admin == "admin") {
+    let user = await User.find();
+    res.send(user);
+  } else {
+    res.status(401).send("authrntication failed");
+  }
+});
 
 server.post("/signup", async (req, res) => {
   let { name, email, password } = req.body;
-
   try {
     let existinguser = await User.findOne({ email });
     if (existinguser) {
@@ -31,38 +34,43 @@ server.post("/signup", async (req, res) => {
 
 server.post("/signin", async (req, res) => {
   let { email, password } = req.body;
-
-
   try {
-    let existinguser = await User.findOne({ email });
-
-
-    if (existinguser) {
-
-      if (password === existinguser.password) {
+    let user = await User.findOne({ email });
+    if (user && user.email === email) {
+      if (user.password === password) {
         res.send({
-          token: `${email}_@_${password}`,
-          user: existinguser
-        })
+          token: `${email}:${password}`,
+          user,
+        });
       } else {
-        res.status(401).send("Password is not exist")
+        res.status(401).send("Wrong Password");
       }
-
-
     } else {
-      res.status(404).send("User not exist")
+      res.status(401).send("Email not found");
     }
   } catch (error) {
-    res.status(404).send(error.message)
+    res.status(404).send(error.message);
   }
+});
 
+server.get("/:_id", async (req, res) => {
+  const { _id } = req.params;
+  try {
+    const user = await User.findById(_id);
+    res.send(user);
+  } catch (e) {
+    res.status(404).send("Id not found");
+  }
 });
 
 server.patch("/edit", async (req, res) => {
   let { email, newemail, newpassword } = req.body;
 
   try {
-    let user = await User.updateOne({ email }, { email: newemail, password: newpassword });
+    let user = await User.updateOne(
+      { email },
+      { email: newemail, password: newpassword }
+    );
     res.send({
       user,
     });
@@ -71,14 +79,16 @@ server.patch("/edit", async (req, res) => {
   }
 });
 
-server.delete("/delete", async (req, res) => {
-  let { email } = req.body;
-  try {
-    let user = await User.deleteOne({ email })
-    res.send(user, "user is deleted successfully")
+server.delete("/delete/:_id", async (req, res) => {
+  let { _id } = req.params;
+
+  const user = await User.findById(_id);
+  if (user) {
+    let Delete = await User.deleteOne({ _id });
+    res.status(200).send(`user ${user.name} is deleted successfully`);
+  } else {
+    res.status(401).send("Id Not found");
   }
-  catch (e) {
-    res.status(404).send(e.message)
-  }
-})
+});
+
 module.exports = server;
