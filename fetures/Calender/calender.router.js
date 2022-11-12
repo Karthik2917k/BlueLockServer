@@ -30,7 +30,7 @@ server.delete("/:_id", async (req, res) => {
       res.status(401).send("Id Not found");
     }
   } else {
-    res.status(401).send("Wrong found");
+    res.status(401).send("Please enter a valid ID");
   }
 });
 module.exports = server;
