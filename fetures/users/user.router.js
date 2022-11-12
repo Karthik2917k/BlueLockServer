@@ -63,17 +63,13 @@ server.get("/:_id", async (req, res) => {
   }
 });
 
-server.patch("/edit", async (req, res) => {
-  let { email, newemail, newpassword } = req.body;
+server.patch("/:id", async (req, res) => {
+  try{
+    const _id = req.params.id;
+    const updates = req.body;
 
-  try {
-    let user = await User.updateOne(
-      { email },
-      { email: newemail, password: newpassword }
-    );
-    res.send({
-      user,
-    });
+    const result = await User.findByIdAndUpdate(_id,updates,{new:true});
+    res.send(result)
   } catch (e) {
     res.status(404).send(e.message);
   }
