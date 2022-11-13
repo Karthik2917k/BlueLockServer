@@ -63,9 +63,9 @@ server.get("/singleuser/:id", async (req, res) => {
   }
 });
 
-server.patch("/:id", async (req, res) => {
+server.patch("/", async (req, res) => {
   try{
-    const _id = req.params.id;
+    const {_id} = req.body
     const updates = req.body;
 
     const result = await User.findByIdAndUpdate(_id,updates,{new:true});
