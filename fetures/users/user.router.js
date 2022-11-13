@@ -75,7 +75,7 @@ server.patch("/", async (req, res) => {
   }
 });
 
-server.delete("/:_id", async (req, res) => {
+server.delete("/", async (req, res) => {
   let { _id } = req.body;
 
   const user = await User.findById(_id);
