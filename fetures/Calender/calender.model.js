@@ -8,7 +8,6 @@ const calenderSchema = new mongoose.Schema(
     },
     text: {
       type: String,
-      required: true,
     },
     date: {
       type: String,
