@@ -75,8 +75,8 @@ server.patch("/", async (req, res) => {
   }
 });
 
-server.delete("/delete/:_id", async (req, res) => {
-  let { _id } = req.params;
+server.delete("/:_id", async (req, res) => {
+  let { _id } = req.body;
 
   const user = await User.findById(_id);
   if (user) {
