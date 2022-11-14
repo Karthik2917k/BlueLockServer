@@ -19,18 +19,26 @@ server.get("/", async (req, res) => {
     res.status(404).send(e.message);
   }
 });
-server.delete("/:_id", async (req, res) => {
-  let { _id } = req.params;
-  if (_id.length === 24) {
-    const post = await Post.findById(_id);
-    if (post) {
-      let Delete = await Post.deleteOne({ _id });
-      res.status(200).send(`post is deleted successfully`);
-    } else {
-      res.status(401).send("Id Not found");
-    }
+server.patch("/", async (req, res) => {
+  try{
+    const {_id} = req.body
+    const updates = req.body;
+
+    const result = await Post.findByIdAndUpdate(_id,updates,{new:true});
+    res.send(result)
+  } catch (e) {
+    res.status(404).send(e.message);
+  }
+});
+server.delete("/", async (req, res) => {
+  let { _id } = req.body;
+
+  const post = await Post.findById(_id);
+  if (post) {
+    let Delete = await Post.deleteOne({ _id });
+    res.status(200).send(`post is deleted successfully`);
   } else {
-    res.status(401).send("Please enter a valid ID");
+    res.status(401).send("Id Not found");
   }
 });
 module.exports = server;
