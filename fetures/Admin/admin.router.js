@@ -4,7 +4,7 @@ const Admin = require("./admin.model.js");
 
 server.get("/", async (req, res) => {
   try{
-    let user = await User.find();
+    let user = await Admin.find();
     res.send(user);
   } catch(e) {
     res.status(401).send(e.message);
