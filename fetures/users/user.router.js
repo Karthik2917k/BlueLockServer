@@ -12,6 +12,7 @@ server.get("/:admin", async (req, res) => {
   }
 });
 
+
 server.post("/signup", async (req, res) => {
   let { name, email, password } = req.body;
   try {
